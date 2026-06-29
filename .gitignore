@@ -1,0 +1,4 @@
+/.idea
+/.venv
+cards.json
+cards.parquet
