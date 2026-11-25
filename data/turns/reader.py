@@ -30,21 +30,21 @@ def _card_name_columns() -> list[str]:
     return cols
 
 
-def collect_card_names(turns_path: Path) -> set[str]:
-    """Derives the set of all card names that appear in a turns parquet file.
+def collect_card_names(turns_paths: list[Path]) -> set[str]:
+    """Derives the set of all card names that appear in turns parquet files.
 
     Reads only the card name columns, flattens them into a single array, and
     returns the unique non-padding values. This is used to restrict the cards
     parquet to only cards that actually appear in the training data.
 
     Args:
-        turns_path: Path to the preprocessed turns parquet file.
+        turns_paths: Paths to the turns parquet files.
 
     Returns:
         Set of card name strings, excluding PAD_TOKEN and null values.
     """
     cols = _card_name_columns()
-    df = pd.read_parquet(turns_path, columns=cols)
+    df = pd.concat([pd.read_parquet(path, columns=cols) for path in turns_paths])
     flat = df.values.ravel()
     return {
         str(v)

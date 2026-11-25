@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 import pandas as pd
 from rich.console import Console
 from rich.table import Table
 
-DATA_PATH = Path(__file__).resolve().parent.parent / "artifacts" / "ygo-turns.parquet"
+from training.turns import SPLITS, load_split
+
 console = Console()
 
 
@@ -101,7 +100,7 @@ def top_hand_cards(df: pd.DataFrame, n: int = 20) -> Table:
 
 
 def main() -> None:
-    df = pd.read_parquet(DATA_PATH)
+    df = pd.concat([load_split(split) for split in SPLITS], ignore_index=True)
     for table in (match_summary, zone_percentiles, occupancy_summary, top_hand_cards):
         console.print(table(df))
         console.print()

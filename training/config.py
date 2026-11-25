@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
 
 @dataclass
 class ModelConfig:
@@ -24,8 +26,6 @@ class TrainingConfig:
     lr: float = 1e-3
     batch_size: int = 256
     max_epochs: int = 200
-    val_fraction: float = 0.2
-    seed: int = 42
     run_seed: int = 0
     num_workers: int = 4
     augment_swap: bool = True
@@ -43,28 +43,17 @@ class ScalarBaselineConfig:
     label_smoothing: float = 0.1
     batch_size: int = 512
     max_epochs: int = 50
-    val_fraction: float = 0.2
-    seed: int = 42
     run_seed: int = 0
     num_workers: int = 4
-    turns_parquet: Path = field(
-        default_factory=lambda: PROJECT_ROOT / "artifacts" / "ygo-turns.parquet"
-    )
-    checkpoint_dir: Path = field(
-        default_factory=lambda: PROJECT_ROOT / "artifacts" / "checkpoints"
-    )
-
-
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
 @dataclass
 class PathConfig:
-    cards_parquet: Path = field(
-        default_factory=lambda: PROJECT_ROOT / "artifacts" / "cards.parquet"
-    )
-    turns_parquet: Path = field(
-        default_factory=lambda: PROJECT_ROOT / "artifacts" / "ygo-turns.parquet"
+    artifacts: Path = PROJECT_ROOT / "artifacts"
+    cards_parquet: Path = PROJECT_ROOT / "artifacts" / "cards.parquet"
+    checkpoints: Path = PROJECT_ROOT / "artifacts" / "checkpoints"
+    logistic_model: Path = (
+        PROJECT_ROOT / "artifacts" / "baselines" / "scalar_logistic.joblib"
     )
 
 

@@ -14,6 +14,7 @@ from data.embedding.encoder import (
 )
 from data.preprocessing.cards import embedding_text
 from data.turns.reader import collect_card_names
+from training.turns import SPLITS, split_path
 
 logging.basicConfig(
     level=logging.INFO,
@@ -55,7 +56,6 @@ def _deduplicate_by_name(
 def build_cards_dataset(
     json_path: Path = DEFAULT_JSON_PATH,
     output_path: Path = DEFAULT_OUTPUT_PATH,
-    turns_path: Path = PROJECT_ROOT / "artifacts" / "ygo-turns.parquet",
     model_name: str = DEFAULT_EMBEDDING_MODEL,
     n_components: int = 32,
 ) -> None:
@@ -67,12 +67,10 @@ def build_cards_dataset(
     Args:
         json_path: Path to the cards JSON file.
         output_path: Destination path for the output Parquet file.
-        turns_path: Path to the preprocessed turns parquet used to derive
-            the set of cards seen in actual games.
         model_name: Sentence-transformers model name for embedding generation.
         n_components: Target dimensionality for PCA compression of raw embeddings.
     """
-    allowed_names = collect_card_names(turns_path)
+    allowed_names = collect_card_names([split_path(split) for split in SPLITS])
     log.info("Unique card names found in turns: %d", len(allowed_names))
 
     raw_cards = load_raw_cards(json_path)

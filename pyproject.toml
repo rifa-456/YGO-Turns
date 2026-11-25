@@ -1,9 +1,13 @@
 [project]
-name = "ygo-model"
-version = "0.1.0"
+name = "ygo-turns"
+version = "1.1.0"
+description = "Win prediction on turn-level states of expert Yu-Gi-Oh! tournament duels."
+readme = "README.md"
+license = "MIT"
 requires-python = ">=3.12"
 dependencies = [
     "duckdb",
+    "huggingface-hub",
     "joblib",
     "lightning[extra]",
     "numpy",
@@ -11,10 +15,9 @@ dependencies = [
     "pyarrow",
     "pydantic",
     "rich",
-    "ruff>=0.15.12",
     "scikit-learn",
     "sentence-transformers",
-    "triton-windows",
+    "triton-windows; sys_platform == 'win32'",
 ]
 
 [dependency-groups]

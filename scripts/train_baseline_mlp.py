@@ -14,14 +14,14 @@ from torch.utils.data import DataLoader
 
 from model.scalar_baseline import ScalarBaseline
 from training.augmentation import swap_perspective
-from training.config import ScalarBaselineConfig
-from training.datamodule import _split_by_match_id
+from training.config import PathConfig, ScalarBaselineConfig
 from training.scalar_dataset import ScalarDataset
+from training.turns import load_split
 
 torch.set_float32_matmul_precision("medium")
 
 
-def _make_module(config: ScalarBaselineConfig):
+def build_module(config: ScalarBaselineConfig):
     import lightning as pl
     import torch.nn as nn
     from torch import Tensor
@@ -169,8 +169,8 @@ def train(config: ScalarBaselineConfig | None = None) -> None:
 
     seed_everything(config.run_seed, workers=True)
 
-    turns_df = pd.read_parquet(config.turns_parquet)
-    train_df, val_df = _split_by_match_id(turns_df, config.val_fraction, config.seed)
+    train_df = load_split("train")
+    val_df = load_split("validation")
     train_df = pd.concat([train_df, swap_perspective(train_df)], ignore_index=True)
 
     num_workers = config.num_workers
@@ -191,7 +191,7 @@ def train(config: ScalarBaselineConfig | None = None) -> None:
         persistent_workers=num_workers > 0,
     )
 
-    module = _make_module(config)
+    module = build_module(config)
 
     callbacks: list[Callback] = [
         RichProgressBar(
@@ -207,7 +207,7 @@ def train(config: ScalarBaselineConfig | None = None) -> None:
             )
         ),
         ModelCheckpoint(
-            dirpath=config.checkpoint_dir / f"seed_{config.run_seed}",
+            dirpath=PathConfig().checkpoints / f"seed_{config.run_seed}",
             filename="ygo-scalar-mlp-{epoch:02d}-{val_auroc:.4f}",
             monitor="val_auroc",
             mode="max",

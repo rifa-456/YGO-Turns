@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 
 import joblib
 import numpy as np
@@ -9,14 +8,14 @@ import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import brier_score_loss, roc_auc_score
 
-from data.schema.constants import MATCH_ID, TARGET
+from data.schema.constants import TARGET
 from training.augmentation import swap_perspective
-from training.config import ScalarBaselineConfig
-from training.datamodule import _split_by_match_id
+from training.config import PathConfig
 from training.scalar_dataset import build_scalar_array
+from training.turns import load_split
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-_OUTPUT_DIR = PROJECT_ROOT / "artifacts" / "baselines"
+_PATHS = PathConfig()
+_OUTPUT_DIR = _PATHS.logistic_model.parent
 
 
 def _evaluate(
@@ -53,21 +52,15 @@ def _evaluate(
     return metrics
 
 
-def train(config: ScalarBaselineConfig | None = None) -> None:
+def train() -> None:
     """Runs the logistic regression baseline training and evaluation pipeline.
 
     Fits a logistic regression model on the scalar feature set, prints train
     and validation metrics, then saves the fitted model and metrics to disk.
-
-    Args:
-        config: ScalarBaselineConfig driving split and path settings.
-            Defaults are used when None is passed.
     """
-    if config is None:
-        config = ScalarBaselineConfig()
 
-    turns_df = pd.read_parquet(config.turns_parquet)
-    train_df, val_df = _split_by_match_id(turns_df, config.val_fraction, config.seed)
+    train_df = load_split("train")
+    val_df = load_split("validation")
     train_df = pd.concat([train_df, swap_perspective(train_df)], ignore_index=True)
 
     print(f"Train rows : {len(train_df):,}")
@@ -84,7 +77,7 @@ def train(config: ScalarBaselineConfig | None = None) -> None:
         max_iter=1000,
         solver="lbfgs",
         C=1.0,
-        random_state=config.seed,
+        random_state=42,
     )
     model.fit(X_train, y_train)
     print("Done.")
@@ -94,7 +87,7 @@ def train(config: ScalarBaselineConfig | None = None) -> None:
 
     _OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    model_path = _OUTPUT_DIR / "scalar_logistic.joblib"
+    model_path = _PATHS.logistic_model
     joblib.dump(model, model_path)
     print(f"\nModel saved → {model_path}")
 

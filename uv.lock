@@ -2621,11 +2621,12 @@ wheels = [
 ]
 
 [[package]]
-name = "ygo-model"
-version = "0.1.0"
+name = "ygo-turns"
+version = "1.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "duckdb" },
+    { name = "huggingface-hub" },
     { name = "joblib" },
     { name = "lightning", extra = ["extra"] },
     { name = "numpy" },
@@ -2633,10 +2634,9 @@ dependencies = [
     { name = "pyarrow" },
     { name = "pydantic" },
     { name = "rich" },
-    { name = "ruff" },
     { name = "scikit-learn" },
     { name = "sentence-transformers" },
-    { name = "triton-windows" },
+    { name = "triton-windows", marker = "sys_platform == 'win32'" },
 ]
 
 [package.dev-dependencies]
@@ -2650,6 +2650,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "duckdb" },
+    { name = "huggingface-hub" },
     { name = "joblib" },
     { name = "lightning", extras = ["extra"] },
     { name = "numpy" },
@@ -2657,10 +2658,9 @@ requires-dist = [
     { name = "pyarrow" },
     { name = "pydantic" },
     { name = "rich" },
-    { name = "ruff", specifier = ">=0.15.12" },
     { name = "scikit-learn" },
     { name = "sentence-transformers" },
-    { name = "triton-windows" },
+    { name = "triton-windows", marker = "sys_platform == 'win32'" },
 ]
 
 [package.metadata.requires-dev]

@@ -4,3 +4,6 @@ __pycache__/
 *.py[cod]
 cards.json
 cards.parquet
+/artifacts/*
+!/artifacts/results.json
+lightning_logs/

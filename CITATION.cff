@@ -1,0 +1,50 @@
+cff-version: 1.2.0
+message: If you use YGO-Turns, please cite the paper below.
+title: YGO-Turns
+abstract: >-
+  A dataset of turn-level game states from expert Yu-Gi-Oh! tournament duels, with the
+  code that builds it and trains win predictors on it.
+type: dataset
+version: "1.1"
+license: MIT
+repository-code: https://github.com/rifa-456/YGO-Turns
+url: https://huggingface.co/datasets/Rifa456/YGO-Turns
+authors:
+  - given-names: Rafael
+    family-names: da Silva Santos
+    affiliation: Universidade Estadual do Ceará
+  - given-names: Leonardo Ferreira
+    family-names: da Costa
+    affiliation: Universidade Estadual do Ceará
+  - given-names: Ana Luiza B. P.
+    family-names: Barros
+    affiliation: Universidade Estadual do Ceará
+  - given-names: Gustavo A. L.
+    family-names: de Campos
+    affiliation: Universidade Estadual do Ceará
+preferred-citation:
+  type: conference-paper
+  title: "YGO-Turns: A Large-Scale Tournament Dataset of Expert Yu-Gi-Oh! Duel States"
+  authors:
+    - given-names: Rafael
+      family-names: da Silva Santos
+    - given-names: Leonardo Ferreira
+      family-names: da Costa
+    - given-names: Ana Luiza B. P.
+      family-names: Barros
+    - given-names: Gustavo A. L.
+      family-names: de Campos
+  collection-title: 2026 IEEE Conference on Games (CoG)
+  publisher:
+    name: IEEE
+  conference:
+    name: 2026 IEEE Conference on Games (CoG)
+    city: Madrid
+    country: ES
+    date-start: 2026-09-01
+    date-end: 2026-09-04
+  year: 2026
+  start: 1
+  end: 4
+  doi: 10.1109/CoG67430.2026.11778780
+  url: https://ieeexplore.ieee.org/document/11778780
