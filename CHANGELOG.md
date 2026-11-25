@@ -22,7 +22,7 @@ The v1.0 file the paper uses stays available under the `v1.0` tag. The 241 colum
 ### Checks
 
 - Replays were available for 676 of the 682 matches. Every row count and every label of those
-  matches agrees with its replay. The 15 duels of the other 6 matches could not be checked.
+  matches agrees with its replay.
 
 ### Code
 
